@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindQuest: Futuristic Healing Garden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pastel-pink: #ffdae9;
+            --pastel-blue: #d4f1f9;
+            --pastel-yellow: #fcf4dd;
+            --pastel-purple: #e2d1f9;
+            --pastel-green: #d1f2eb;
+            --deep-purple: #6c5ce7;
+            --text-color: #5d5d5d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background-color: var(--pastel-blue);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 80%, rgba(255, 218, 233, 0.5) 0%, transparent 20%);
+            color: var(--text-color);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 15px 0 var(--pastel-purple), 0 25px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+            margin: 15px;
+            border: 8px solid white;
+        }
+
+        /* Elements Decoration */
+        .decor {
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & Buttons */
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--deep-purple);
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 0px var(--pastel-pink);
+        }
+
+        .btn {
+            background: var(--pastel-green);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 0 #b2d8d0;
+            margin: 10px;
+            width: 80%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #b2d8d0;
+            background: #bef7ea;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b2d8d0;
+        }
+
+        .btn-secondary {
+            background: var(--pastel-yellow);
+            box-shadow: 0 6px 0 #e6dbbc;
+        }
+
+        /* Specific Elements */
+        .character-box {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .info-panel {
+            background: var(--pastel-pink);
+            padding: 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+
+        .mode-selection {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .floating-stars {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: gold;
+        }
+
+        /* Quiz UI */
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--deep-purple);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="floating-stars">✨⭐</div>
+    
+    <div id="home-screen" class="screen active">
+        <div class="character-box">🐱‍🚀</div>
+        <h1>MindQuest</h1>
+        <p>Jelajahi dunia pikiran yang tenang dan penuh warna!</p>
+        <button class="btn" onclick="showScreen('mode-screen')">Mainkan Sekarang</button>
+        <button class="btn btn-secondary" onclick="showScreen('info-screen')">Info Game</button>
+        <div style="margin-top: 20px;">🌸🌼🌻</div>
+    </div>
+
+    <div id="mode-screen" class="screen">
+        <div class="character-box">🎨</div>
+        <h2>Pilih Jalurmu</h2>
+        <div class="mode-selection">
+            <button class="btn" onclick="startQuiz('ADHD')">Fokus ADHD 🚀</button>
+            <button class="btn btn-secondary" onclick="startQuiz('MADD')">Ketenangan MADD 🌊</button>
+        </div>
+        <button onclick="showScreen('home-screen')" style="margin-top:20px; background:none; border:none; cursor:pointer; color: #888;">← Kembali</button>
+    </div>
+
+    <div id="info-screen" class="screen">
+        <h2>Tentang MindQuest</h2>
+        <div class="info-panel">
+            Game ini dirancang khusus dengan palet warna pastel dan musik visual yang lembut. 
+            <strong>Tujuan:</strong> Memberikan stimulasi kognitif yang ringan tanpa membuat kewalahan (overwhelmed). 
+            Cocok untuk melatih fokus (ADHD) dan relaksasi pikiran (MADD).
+        </div>
+        <button class="btn" onclick="showScreen('home-screen')">Mengerti!</button>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+        <div id="quiz-content">
+            <div id="question" class="question-text">Memuat pertanyaan...</div>
+            <div id="answer-buttons"></div>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div class="character-box">🏆</div>
+        <h2>Luar Biasa!</h2>
+        <p id="result-text"></p>
+        <button class="btn" onclick="showScreen('home-screen')">Main Lagi</button>
+    </div>
+</div>
+
+<script>
+    const questions = {
+        ADHD: [
+            { q: "Manakah bunga yang berwarna biru?", a: ["🌸", "🦋", "🌻", "💎"], correct: 1 },
+            { q: "Ayo temukan bintang di antara awan!", a: ["☁️", "☁️", "⭐", "☁️"], correct: 2 }
+        ],
+        MADD: [
+            { q: "Warna apa yang membuatmu merasa paling tenang?", a: ["Merah Api", "Biru Lautan", "Kuning Terang", "Hitam"], correct: 1 },
+            { q: "Tarik napas perlahan... Pilih ikon air.", a: ["🔥", "🌵", "💧", "🌪️"], correct: 2 }
+        ]
+    };
+
+    let currentQuestions = [];
+    let currentIdx = 0;
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function startQuiz(mode) {
+        currentQuestions = questions[mode];
+        currentIdx = 0;
+        showScreen('quiz-screen');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = currentQuestions[currentIdx];
+        const progress = ((currentIdx) / currentQuestions.length) * 100;
+        document.getElementById('progress-fill').style.width = progress + "%";
+        
+        document.getElementById('question').innerText = q.q;
+        const btnContainer = document.getElementById('answer-buttons');
+        btnContainer.innerHTML = '';
+
+        q.a.forEach((ans, index) => {
+            const button = document.createElement('button');
+            button.className = 'btn btn-secondary';
+            button.style.width = '45%';
+            button.style.display = 'inline-block';
+            button.innerText = ans;
+            button.onclick = () => handleAnswer(index === q.correct);
+            btnContainer.appendChild(button);
+        });
+    }
+
+    function handleAnswer(isCorrect) {
+        if(isCorrect) {
+            currentIdx++;
+            if(currentIdx < currentQuestions.length) {
+                renderQuestion();
+            } else {
+                document.getElementById('progress-fill').style.width = "100%";
+                document.getElementById('result-text').innerText = "Kamu telah menyelesaikan perjalanan hari ini dengan sangat baik!";
+                showScreen('result-screen');
+            }
+        } else {
+            alert("Coba lagi pelan-pelan ya... ✨");
+        }
+    }
+</script>
+
+</body>
+</html>
